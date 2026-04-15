@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'poornesh666/merchandise-site'
         DOCKER_TAG = "${BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
+        DOCKER_CREDENTIALS = credentials('dockerhub')
     }
 
     stages {
@@ -52,7 +52,7 @@ pipeline {
             steps {
                 echo '========== Deploying to Kubernetes =========='
                 script {
-                    sh '''
+                    bat '''
                         kubectl set image deployment/html-demo html-demo=${DOCKER_IMAGE}:latest --record
                         kubectl rollout status deployment/html-demo
                     '''
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 echo '========== Verifying deployment =========='
                 script {
-                    sh '''
+                    bat '''
                         kubectl get deployment html-demo
                         kubectl get pods -l app=html-demo
                         kubectl get svc html-demo-service
